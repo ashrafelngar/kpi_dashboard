@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>داشبورد مؤشرات الأداء – مكاتب مدينتي</title>
+<style>
+:root{--bg:#F2F7FB;--card:#fff;--tx:#0B2545;--mu:#5B6B7F;--bd:#D5E3EE;--tq:#0FA3A3;--bl:#E8F4FB;--g:#14804A;--y:#946700;--r:#C23B3B;--gb:#DFF5E8;--yb:#FFF1CC;--rb:#FDE1E1;--nb:#E9EEF3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#07162B;--card:#0F2342;--tx:#E6F1FA;--mu:#9DB2C7;--bd:#22405F;--bl:#12304F;--g:#5FD79B;--y:#F2C14E;--r:#FF8A8A;--gb:#0F3A2A;--yb:#4A3A0A;--rb:#4A1D1D;--nb:#1B2F48}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#07162B;--card:#0F2342;--tx:#E6F1FA;--mu:#9DB2C7;--bd:#22405F;--bl:#12304F;--g:#5FD79B;--y:#F2C14E;--r:#FF8A8A;--gb:#0F3A2A;--yb:#4A3A0A;--rb:#4A1D1D;--nb:#1B2F48}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,Arial,sans-serif;font-size:15px;line-height:1.6}
+header{background:linear-gradient(135deg,#0B2545,#13518A 60%,#0FA3A3);color:#fff;padding:20px 16px}
+header h1{margin:0 0 4px;font-size:22px}header p{margin:0;opacity:.9;font-size:13px}
+.wrap{max-width:1200px;margin:0 auto;padding:14px}
+.badge{display:inline-block;margin-top:10px;padding:3px 12px;border-radius:99px;font-size:12px;font-weight:700}
+.b-s{background:#FFE08A;color:#5a4300}.b-i{background:#B8F0E8;color:#064e47}
+.note{background:var(--yb);color:var(--y);border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:12px}
+.note.imp{background:var(--gb);color:var(--g)}
+.bar{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+.bar label{display:flex;flex-direction:column;font-size:12px;color:var(--mu);gap:3px;min-width:120px;flex:1}
+select,button{font:inherit;font-size:14px;padding:7px 10px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx)}
+button{cursor:pointer;background:var(--tx);color:var(--bg);border:0;font-weight:700}
+button.o{background:transparent;color:var(--tx);border:1px solid var(--tx)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+#msg{font-size:13px;color:var(--mu);margin:0 0 10px;min-height:20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;cursor:pointer;border-top:4px solid var(--bd)}
+.card.sel{outline:2px solid var(--tq)}
+.card.g{border-top-color:var(--g)}.card.y{border-top-color:#E0A100}.card.r{border-top-color:var(--r)}
+.card h3{margin:0 0 6px;font-size:13px;color:var(--mu);font-weight:600;min-height:40px}
+.v{font-size:26px;font-weight:800}.v small{font-size:13px;font-weight:600;color:var(--mu)}
+.row{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-top:4px;gap:6px}
+.pg{height:7px;background:var(--nb);border-radius:9px;margin:8px 0;overflow:hidden}.pg i{display:block;height:100%;background:var(--tq)}
+.pill{padding:1px 9px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.pill.g{background:var(--gb);color:var(--g)}.pill.y{background:var(--yb);color:var(--y)}.pill.r{background:var(--rb);color:var(--r)}.pill.n{background:var(--nb);color:var(--mu)}
+.up{color:var(--g)}.dn{color:var(--r)}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;margin-bottom:14px}
+.cb{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.cb h4{margin:0 0 8px;font-size:14px}.cb div{position:relative;height:250px}
+.tw{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
+th{background:var(--bl);text-align:right;padding:8px;color:var(--tx)}td{padding:8px;border-top:1px solid var(--bd);text-align:right}
+tbody tr{cursor:pointer}tbody tr.sel{background:var(--bl)}
+.empty{padding:20px;text-align:center;color:var(--mu)}
+</style>
+</head>
+<body>
+<header><div class="wrap" style="padding:0">
+<h1>داشبورد مؤشرات الأداء – مكاتب مدينتي</h1>
+<span id="badge" class="badge b-s"></span>
+</div></header>
+<div class="wrap">
+<div id="note" class="note"></div>
+<div class="bar">
+<label>من شهر<select id="fm"></select></label>
+<label>إلى شهر<select id="to"></select></label>
+<label>الإدارة<select id="dp"></select></label>
+<label>حالة المؤشر<select id="st"><option value="all">الكل</option><option>محقق</option><option>قريب</option><option>متأخر</option><option>لا بيانات</option></select></label>
+</div>
+<div class="acts">
+<button id="imp">استيراد Excel / CSV</button>
+<button id="tpl" class="o">تنزيل قالب الاستيراد</button>
+<button id="xc" class="o">تصدير CSV</button>
+<button id="xx" class="o">تصدير Excel</button>
+<button id="rs" class="o">استعادة البيانات التجريبية</button>
+<input type="file" id="file" accept=".csv,.xlsx,.xls" hidden>
+</div>
+<p id="msg"></p>
+<div id="cards" class="cards"></div>
+<div class="bar" style="margin-bottom:10px"><label style="max-width:420px">المؤشر المعروض في الرسمين الأولين<select id="ks"></select></label></div>
+<div class="charts">
+<div class="cb"><h4 id="h1"></h4><div><canvas id="c1"></canvas></div></div>
+<div class="cb"><h4 id="h2"></h4><div><canvas id="c2"></canvas></div></div>
+<div class="cb"><h4>نسبة الإنجاز لكل مؤشر</h4><div><canvas id="c3"></canvas></div></div>
+</div>
+<div class="tw"><table><thead><tr><th>المؤشر</th><th>المعادلة</th><th>القيمة الفعلية</th><th>المستهدف</th><th>نسبة الإنجاز</th><th>حالة الأداء</th></tr></thead><tbody id="tb"></tbody></table></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const AM=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const KPIS=[
+{id:'vol',n:'عدد المتطوعين',sh:'المتطوعون',t:'count',u:'متطوع',f:'مجموع المتطوعين المسجلين',d:1,tg:40},
+{id:'hrs',n:'عدد ساعات التطوع',sh:'ساعات التطوع',t:'count',u:'ساعة',f:'مجموع ساعات التطوع',d:1,tg:300},
+{id:'act',n:'عدد الأنشطة المجتمعية',sh:'الأنشطة',t:'count',u:'نشاط',f:'مجموع الأنشطة المنفذة',d:1,tg:8},
+{id:'crm',n:'نسبة إنجاز الطلبات المحالة للإدارات (CRM)',sh:'إنجاز CRM',t:'pct',u:'%',f:'(الطلبات المنجزة ÷ الطلبات المحالة) × 100',d:1,tg:90},
+{id:'sat',n:'نسبة رضا العملاء عن إغلاق المعاملات',sh:'رضا الإغلاق',t:'pct',u:'%',f:'(عدد الراضين ÷ إجمالي المجيبين) × 100',d:1,tg:90},
+{id:'ben',n:'معدل رضا المستفيدين عن خدمات المشاركة المجتمعية',sh:'رضا المستفيدين',t:'pct',u:'%',f:'(عدد الراضين ÷ إجمالي المجيبين) × 100',d:1,tg:88},
+{id:'off',n:'نسبة أداء المكاتب',sh:'أداء المكاتب',t:'pct',u:'%',f:'(المهام المحققة ÷ إجمالي المهام) × 100',d:1,tg:85},
+{id:'tim',n:'متوسط زمن إغلاق الطلب',sh:'زمن الإغلاق',t:'avg',u:'يوم',f:'إجمالي أيام الإغلاق ÷ عدد الطلبات المغلقة',d:-1,tg:5},
+{id:'sla',n:'نسبة الطلبات المغلقة ضمن SLA',sh:'ضمن SLA',t:'pct',u:'%',f:'(المغلقة ضمن المدة ÷ إجمالي المغلقة) × 100',d:1,tg:95},
+{id:'bud',n:'نسبة الالتزام بالميزانية',sh:'الميزانية',t:'pct',u:'%',f:'(البنود ضمن الميزانية ÷ إجمالي البنود) × 100',d:1,tg:95}];
+const S={rows:[],src:'',sel:'crm'};
+const DP=['مكتب مدينتي - قطاع الشمال','مكتب مدينتي - قطاع الشرق','مكتب مدينتي - قطاع الجنوب'];
+let charts={};
+
+// ---------- helpers ----------
+const AD='٠١٢٣٤٥٦٧٨٩';
+function num(v){if(v===''||v==null)return null;const s=String(v).replace(/[٠-٩]/g,d=>AD.indexOf(d)).replace(/[%,٬\s]/g,'').replace('٫','.');if(s==='')return null;const x=Number(s);return isFinite(x)?x:null}
+function nm(v){if(v instanceof Date&&!isNaN(v))return v.getFullYear()+'-'+String(v.getMonth()+1).padStart(2,'0');
+ const s=String(v||'').trim().replace(/[٠-٩]/g,d=>AD.indexOf(d));let m=s.match(/^(\d{4})[-\/](\d{1,2})/);if(m)return m[1]+'-'+m[2].padStart(2,'0');
+ m=s.match(/^(\d{1,2})[-\/](\d{4})$/);return m?m[2]+'-'+m[1].padStart(2,'0'):null}
+const lab=m=>AM[+m.slice(5)-1]+' '+m.slice(0,4);
+const fmt=(x,k)=>x==null?'—':x.toLocaleString('en-US',{maximumFractionDigits:k&&k.t==='count'?0:1});
+const r1=x=>x==null?null:Math.round(x*10)/10;
+
+// ---------- calculation (empty values and zero denominators are skipped) ----------
+function agg(rows,k){let a=0,b=0,tg=0,n=0,has=false;
+ for(const r of rows){if(r.k!==k.id)continue;const x=num(r.a);if(x===null)continue;
+  if(k.t!=='count'){const y=num(r.b);if(y===null||y===0)continue;b+=y}
+  a+=x;has=true;const t=num(r.tg);if(t!==null){tg+=t;n++}}
+ if(!has)return null;
+ return{actual:k.t==='count'?a:k.t==='pct'?a/b*100:a/b,target:n?(k.t==='count'?tg:tg/n):null}}
+function ach(k,g){if(!g||g.target==null||g.target===0)return null;
+ if(k.d>0)return g.actual/g.target*100;return g.actual>0?g.target/g.actual*100:null}
+const stt=a=>a==null?'لا بيانات':a>=100?'محقق':a>=90?'قريب':'متأخر';
+const cl=s=>({'محقق':'g','قريب':'y','متأخر':'r'}[s]||'n');
+
+// ---------- sample data (clearly fake, for layout demo only) ----------
+function sample(){let s=7;const R=()=>(s=(s*16807)%2147483647)/2147483647,rows=[];
+ for(let i=1;i<=6;i++)for(let d=1;d<=3;d++)for(const k of KPIS){
+  const m='2026-'+String(i).padStart(2,'0'),dp=DP[d-1];let a,b='';
+  if(k.t==='count')a=Math.round(k.tg*(.8+R()*.35));
+  else if(k.t==='pct'){b=100+Math.round(R()*60);a=Math.round(b*Math.min(1,k.tg/100*(.88+R()*.16)))}
+  else{b=80+Math.round(R()*40);a=Math.round(b*k.tg*(.9+R()*.5))}
+  rows.push({m,dp,k:k.id,a,b,tg:k.tg})}
+ return rows}
+
+// ---------- load & filters ----------
+function load(rows,src){S.rows=rows;S.src=src;
+ const ms=[...new Set(rows.map(r=>r.m))].sort(),ds=[...new Set(rows.map(r=>r.dp))].sort();
+ for(const id of['fm','to']){const e=$(id);e.innerHTML='';ms.forEach(m=>e.add(new Option(lab(m),m)))}
+ $('fm').value=ms[0];$('to').value=ms[ms.length-1];
+ const d=$('dp');d.innerHTML='';d.add(new Option('كل الإدارات','all'));ds.forEach(x=>d.add(new Option(x,x)));
+ const bd=$('badge'),nt=$('note'),smp=src==='sample';
+ bd.className='badge '+(smp?'b-s':'b-i');bd.textContent=smp?'بيانات تجريبية (للعرض فقط)':'بيانات مُدخلة من ملف: '+src;
+ nt.className='note'+(smp?'':' imp');
+ nt.textContent=smp?'بيانات تجريبية وليست بيانات حقيقية.':'بيانات مُدخلة من الملف.';
+ render()}
+function render(){
+ if($('fm').value>$('to').value)$('to').value=$('fm').value;
+ const rows=S.rows.filter(r=>r.m>=$('fm').value&&r.m<=$('to').value&&($('dp').value==='all'||r.dp===$('dp').value));
+ const ms=[...new Set(rows.map(r=>r.m))].sort(),L=ms[ms.length-1],P=ms[ms.length-2];
+ const list=KPIS.map(k=>{const g=agg(rows,k),a=ach(k,g);let ch=null;
+  if(P){const x=agg(rows.filter(r=>r.m===L),k),y=agg(rows.filter(r=>r.m===P),k);if(x&&y)ch=x.actual-y.actual}
+  return{k,g,a,s:stt(a),ch}});
+ const shown=list.filter(o=>$('st').value==='all'||o.s===$('st').value);
+ $('ks').innerHTML='';KPIS.forEach(k=>$('ks').add(new Option(k.n,k.id)));$('ks').value=S.sel;
+ drawCards(shown,L,P);drawTable(shown);drawCharts(rows,ms,list,shown)}
+
+function drawCards(shown,L,P){const c=$('cards');c.innerHTML='';
+ if(!shown.length){c.innerHTML='<div class="empty" style="grid-column:1/-1">لا توجد مؤشرات تطابق الفلاتر الحالية</div>';return}
+ for(const o of shown){const{k,g}=o,e=document.createElement('div');
+  e.className='card '+cl(o.s)+(k.id===S.sel?' sel':'');
+  let chh='<span>التغير عن الشهر السابق: —</span>';
+  if(o.ch!=null){const good=o.ch*k.d,up=o.ch>0;chh='<span>عن الشهر السابق: <b class="'+(good>0?'up':good<0?'dn':'')+'">'+(o.ch===0?'=':(up?'▲ ':'▼ ')+fmt(Math.abs(o.ch),{t:'x'}))+'</b></span>'}
+  e.innerHTML='<h3></h3><div class="v"></div><div class="pg"><i></i></div><div class="row"><span class="tg"></span><span class="ac"></span></div><div class="row">'+chh+'<span class="pill '+cl(o.s)+'">'+o.s+'</span></div>';
+  e.querySelector('h3').textContent=k.n;
+  e.querySelector('.v').innerHTML=fmt(g&&g.actual,k)+' <small>'+k.u+'</small>';
+  e.querySelector('i').style.width=Math.min(o.a||0,100)+'%';
+  e.querySelector('.tg').textContent='المستهدف: '+(g&&g.target!=null?fmt(g.target,k):'—');
+  e.querySelector('.ac').textContent='الإنجاز: '+(o.a==null?'—':fmt(o.a,{t:'x'})+'%');
+  e.onclick=()=>{S.sel=k.id;render()};c.appendChild(e)}}
+
+function drawTable(shown){const tb=$('tb');tb.innerHTML='';
+ if(!shown.length){tb.innerHTML='<tr><td colspan="6" class="empty">لا توجد بيانات</td></tr>';return}
+ for(const o of shown){const{k,g}=o,tr=document.createElement('tr');if(k.id===S.sel)tr.className='sel';
+  const cells=[k.n,k.f,g?fmt(g.actual,k)+' '+k.u:'—',g&&g.target!=null?fmt(g.target,k)+' '+k.u:'—',o.a==null?'—':fmt(o.a,{t:'x'})+'%'];
+  cells.forEach(t=>{const td=document.createElement('td');td.textContent=t;tr.appendChild(td)});
+  const td=document.createElement('td'),sp=document.createElement('span');sp.className='pill '+cl(o.s);sp.textContent=o.s;td.appendChild(sp);tr.appendChild(td);
+  tr.onclick=()=>{S.sel=k.id;render()};tb.appendChild(tr)}}
+
+// ---------- charts ----------
+function mk(id,cfg){if(charts[id])charts[id].destroy();charts[id]=new Chart($(id),cfg)}
+function drawCharts(rows,ms,list,shown){
+ const css=getComputedStyle(document.documentElement),mu=css.getPropertyValue('--mu').trim()||'#667',bd=css.getPropertyValue('--bd').trim()||'#ddd';
+ Chart.defaults.color=mu;Chart.defaults.font.family='Tahoma,Arial,sans-serif';
+ const K=KPIS.find(k=>k.id===S.sel),base={responsive:true,maintainAspectRatio:false,plugins:{legend:{rtl:true,labels:{boxWidth:12}},tooltip:{rtl:true,textDirection:'rtl'}},scales:{x:{grid:{color:bd}},y:{grid:{color:bd},beginAtZero:true}}};
+ $('h1').textContent='الاتجاه الشهري: '+K.sh;$('h2').textContent='المقارنة حسب الإدارة: '+K.sh;
+ const A='#0FA3A3',T='#4F8FD9';
+ mk('c1',{type:'line',data:{labels:ms.map(lab),datasets:[
+  {label:'الفعلي',data:ms.map(m=>{const g=agg(rows.filter(r=>r.m===m),K);return g?r1(g.actual):null}),borderColor:A,backgroundColor:A,tension:.25},
+  {label:'المستهدف',data:ms.map(m=>{const g=agg(rows.filter(r=>r.m===m),K);return g&&g.target!=null?r1(g.target):null}),borderColor:T,borderDash:[6,4],pointRadius:0}]},options:base});
+ const ds=[...new Set(rows.map(r=>r.dp))].sort(),gs=ds.map(d=>agg(rows.filter(r=>r.dp===d),K));
+ mk('c2',{data:{labels:ds,datasets:[
+  {type:'bar',label:'الفعلي',data:gs.map(g=>g?r1(g.actual):null),backgroundColor:A},
+  {type:'line',label:'المستهدف',data:gs.map(g=>g&&g.target!=null?r1(g.target):null),borderColor:T,borderDash:[6,4],pointRadius:3}]},options:base});
+ const items=shown.filter(o=>o.a!=null),col={g:'#1B9E5A',y:'#E0A100',r:'#D64545'};
+ mk('c3',{type:'bar',data:{labels:items.map(o=>o.k.sh),datasets:[{label:'نسبة الإنجاز %',data:items.map(o=>r1(o.a)),backgroundColor:items.map(o=>col[cl(o.s)])}]},
+  options:{...base,indexAxis:'y',scales:{x:{grid:{color:bd},beginAtZero:true},y:{grid:{color:bd}}},plugins:{...base.plugins,legend:{display:false}},
+   onClick:(e,els)=>{if(els.length){S.sel=items[els[0].index].k.id;render()}}}})}
+
+// ---------- import ----------
+function hk(h){h=String(h).trim().toLowerCase();
+ if(/الشهر|month|date|التاريخ/.test(h))return'm';if(/الإدارة|الادارة|dept|depart/.test(h))return'dp';if(/المؤشر|kpi|indicator/.test(h))return'k';
+ if(/المقام|denom/.test(h))return'b';if(/المستهدف|target/.test(h))return'tg';if(/البسط|numer|actual|value|القيمة|الفعلي/.test(h))return'a';return null}
+function importFile(f){const msg=$('msg');msg.textContent='جارٍ قراءة الملف…';
+ const rd=new FileReader();rd.onerror=()=>msg.textContent='تعذّرت قراءة الملف.';
+ rd.onload=()=>{try{
+  const wb=XLSX.read(rd.result,{type:'array',cellDates:true}),js=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+  const rows=[];let skip=0;
+  for(const o of js){const r={};for(const key in o){const h=hk(key);if(h)r[h]=o[key]}
+   const k=KPIS.find(x=>x.n===String(r.k||'').trim()||x.id===String(r.k||'').trim()),m=nm(r.m);
+   if(!k||!m){skip++;continue}
+   if(num(r.a)===null){skip++;continue}
+   rows.push({m,dp:String(r.dp||'غير محدد').trim()||'غير محدد',k:k.id,a:r.a,b:r.b,tg:r.tg})}
+  if(!rows.length){msg.textContent='لم يتم العثور على صفوف صالحة. تأكدي من أسماء الأعمدة (الشهر، الإدارة، المؤشر، البسط، المقام، المستهدف) وأسماء المؤشرات كما في القالب.';return}
+  load(rows,f.name);msg.textContent='تم استيراد '+rows.length+' صفًا، وتم تجاهل '+skip+' صفًا (فارغ القيمة أو مؤشر/شهر غير معروف).'
+ }catch(e){msg.textContent='ملف غير صالح: '+e.message}};
+ rd.readAsArrayBuffer(f)}
+
+// ---------- export ----------
+const csvq=v=>'"'+String(v).replace(/"/g,'""')+'"';
+function table(){const rows=S.rows.filter(r=>r.m>=$('fm').value&&r.m<=$('to').value&&($('dp').value==='all'||r.dp===$('dp').value));
+ return[['المؤشر','المعادلة','القيمة الفعلية','المستهدف','نسبة الإنجاز %','حالة الأداء']].concat(KPIS.map(k=>{const g=agg(rows,k),a=ach(k,g);
+  return[k.n,k.f,g?r1(g.actual):'',g&&g.target!=null?r1(g.target):'',a==null?'':r1(a),stt(a)]}))}
+function save(name,data){try{const t=name.endsWith('.xlsx')?'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':'text/csv;charset=utf-8';
+ const u=URL.createObjectURL(new Blob([data],{type:t})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(u),2000);$('msg').textContent='تم تنزيل الملف: '+name}catch(e){$('msg').textContent='تعذّر تنزيل الملف.'}}
+$('xc').onclick=()=>save('kpi_results.csv','\uFEFF'+table().map(r=>r.map(csvq).join(',')).join('\r\n'));
+$('xx').onclick=()=>{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(table()),'النتائج');
+ XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['الشهر','الإدارة','المؤشر','البسط','المقام','المستهدف']].concat(S.rows.map(r=>[r.m,r.dp,KPIS.find(k=>k.id===r.k).n,r.a,r.b,r.tg]))),'البيانات');
+ save('kpi_results.xlsx',XLSX.write(wb,{bookType:'xlsx',type:'array'}))};
+$('tpl').onclick=()=>{const h=['الشهر','الإدارة','المؤشر','البسط','المقام','المستهدف'];
+ save('kpi_import_template.csv','\uFEFF'+[h].concat(KPIS.map(k=>['2026-01','اسم الإدارة',k.n,'',k.t==='count'?'':'',''])).map(r=>r.map(csvq).join(',')).join('\r\n'))};
+
+// ---------- wiring ----------
+['fm','to','dp','st'].forEach(id=>$(id).onchange=render);
+$('ks').onchange=()=>{S.sel=$('ks').value;render()};
+$('imp').onclick=()=>$('file').click();
+$('file').onchange=e=>{const f=e.target.files[0];if(f)importFile(f);e.target.value=''};
+$('rs').onclick=()=>{load(sample(),'sample');$('msg').textContent='تمت استعادة البيانات التجريبية.'};
+load(sample(),'sample');
+</script>
+</body>
+</html>
